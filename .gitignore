@@ -1,0 +1,6 @@
+# Entorno virtual (como la carpeta target/ de Maven)
+.venv/
+
+# Archivos que Python genera solo al ejecutar
+__pycache__/
+*.pyc
