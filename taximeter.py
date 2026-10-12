@@ -32,4 +32,8 @@ class Taximeter:
         elapsed = now - self._segment_start
         self._total += elapsed * self._current_rate()
         self._segment_start = now
+        
+    def finish(self) -> float:
+        self._close_segment()
+        return self._total
 

@@ -12,6 +12,7 @@ def show_instructions() -> None:
     print("  e  →  Empezar una carrera")
     print("  p  →  Taxi parado")
     print("  m  →  Taxi en movimiento")
+    print("  f  →  Finalizar carrera")
     print("  q  →  Salir del programa")
 
     print("\nEscribe la letra y pulsa Enter.")
@@ -36,6 +37,10 @@ def main() -> None:
             case "m":
                 taximeter.set_moving(True)
                 print("Taxi en movimiento.")
+            case "f":
+                total = taximeter.finish()
+                total_text = f"{total:.2f}".replace(".", ",")
+                print(f"Carrera finalizada. Total a cobrar: {total_text} €")
             case "q":
                 print("Hasta luego!")
                 break
