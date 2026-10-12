@@ -10,7 +10,10 @@ def show_instructions() -> None:
     print("=" * 40)
     print("Sigue estas instrucciones para usarlo:\n")
     print("  e  →  Empezar una carrera")
+    print("  p  →  Taxi parado")
+    print("  m  →  Taxi en movimiento")
     print("  q  →  Salir del programa")
+
     print("\nEscribe la letra y pulsa Enter.")
     print("=" * 40)
 
@@ -26,12 +29,16 @@ def main() -> None:
 
             case "e":
                 taximeter.start()
-                print("Carrera iniciada. El taxi está parado.")
+                print("Carrera iniciada")
+            case "p":
+                taximeter.set_moving(False)
+                print("Taxi parado.")
+            case "m":
+                taximeter.set_moving(True)
+                print("Taxi en movimiento.")
             case "q":
                 print("Hasta luego!")
-
                 break
-
             case _:
                 print("Comando no válido.")
 
