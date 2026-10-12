@@ -28,6 +28,10 @@ def main() -> None:
 
         match command:
 
+            case "p" | "m" | "f" if not taximeter.in_progress:
+                print("Primero empieza carrera con 'e'.")
+            case "e" if taximeter.in_progress:
+                print("La carrera ya ha sido iniciada, si quieres finalizar presiona 'f'.")
             case "e":
                 taximeter.start()
                 print("Carrera iniciada")

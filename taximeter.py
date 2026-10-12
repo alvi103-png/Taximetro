@@ -9,13 +9,18 @@ class Taximeter:
 
         self._stopped_rate = stopped_rate
         self._moving_rate = movig_rate
+        self._in_progress = False
 
         self._is_moving = False
         self._segment_start = 0.0
         self._total = 0.0
 
-    def start(self) -> None:
+    @property
+    def in_progress(self) -> bool:
+        return self._in_progress
 
+    def start(self) -> None:
+        self._in_progress = True
         self._is_moving = False
         self._total = 0.0
         self._segment_start = time.time()
@@ -35,5 +40,6 @@ class Taximeter:
         
     def finish(self) -> float:
         self._close_segment()
+        self._in_progress = False
         return self._total
 
