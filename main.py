@@ -1,4 +1,5 @@
 from taximeter import Taximeter
+from fare_config import load_fares
 
 STOPPED_RATE = 0.02
 MOVING_RATE = 0.05
@@ -19,7 +20,8 @@ def show_instructions() -> None:
     print("=" * 40)
 
 def main() -> None:
-    taximeter = Taximeter(STOPPED_RATE, MOVING_RATE)
+    stopped_rate, moving_rate = load_fares()
+    taximeter = Taximeter(stopped_rate, moving_rate)
     show_instructions()
 
     while True:
