@@ -4,3 +4,5 @@
 # Archivos que Python genera solo al ejecutar
 __pycache__/
 *.pyc
+
+.pytest_cache/
