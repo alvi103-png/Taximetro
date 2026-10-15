@@ -5,15 +5,18 @@ class Taximeter:
 
     """Calcula la tarifa de una carrera según el tiempo parado y en movimiento"""
 
-    def __init__(self, stopped_rate: float, movig_rate: float):
+    def __init__(self, stopped_rate: float, moving_rate: float):
 
         self._stopped_rate = stopped_rate
-        self._moving_rate = movig_rate
+        self._moving_rate = moving_rate
         self._in_progress = False
 
         self._is_moving = False
         self._segment_start = 0.0
         self._total = 0.0
+
+        self._trip_start = 0.0
+        self._duration = 0.0
 
     @property
     def in_progress(self) -> bool:
@@ -24,6 +27,7 @@ class Taximeter:
         self._is_moving = False
         self._total = 0.0
         self._segment_start = time.time()
+        self._trip_start = self._segment_start
 
     def set_moving(self, is_moving: bool) -> None:
         self._close_segment()
@@ -41,5 +45,11 @@ class Taximeter:
     def finish(self) -> float:
         self._close_segment()
         self._in_progress = False
+        self._duration = self._segment_start - self._trip_start
         return self._total
+
+    @property
+    def duration(self) -> float:
+        """Duración en segundos de la última carrera terminada"""
+        return self._duration
 

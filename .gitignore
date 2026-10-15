@@ -4,3 +4,11 @@
 # Archivos que Python genera solo al ejecutar
 __pycache__/
 *.pyc
+
+.pytest_cache/
+
+# Logs que genera el programa al ejecutarse
+logs/
+
+# historico de carreras que genera el programa
+data/
