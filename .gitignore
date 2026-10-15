@@ -6,3 +6,6 @@ __pycache__/
 *.pyc
 
 .pytest_cache/
+
+# Logs que genera el programa al ejecutarse
+logs/

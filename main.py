@@ -1,8 +1,11 @@
-from taximeter import Taximeter
-from fare_config import load_fares
+import logging
 
-STOPPED_RATE = 0.02
-MOVING_RATE = 0.05
+from fare_config import load_fares
+from log_config import setup_logging
+from taximeter import Taximeter
+
+logger = logging.getLogger(__name__)
+
 
 def show_instructions() -> None:
 
@@ -20,7 +23,16 @@ def show_instructions() -> None:
     print("=" * 40)
 
 def main() -> None:
-    stopped_rate, moving_rate = load_fares()
+    setup_logging()
+    logger.info("Application started")
+
+    try:
+        stopped_rate, moving_rate = load_fares()
+    except (OSError, ValueError, KeyError):
+        logger.exception("Could not load fares from config file")
+        print("Error: no se pudieron cargar las tarifas. Revisa config/fares.json.")
+        return
+    
     taximeter = Taximeter(stopped_rate, moving_rate)
     show_instructions()
 
@@ -30,28 +42,42 @@ def main() -> None:
 
         match command:
 
-            case "p" | "m" | "f" if not taximeter.in_progress:
-                print("Primero empieza carrera con 'e'.")
             case "e" if taximeter.in_progress:
                 print("La carrera ya ha sido iniciada, si quieres finalizar presiona 'f'.")
+                logger.warning("Start rejected: trip already in progress")
+
             case "e":
                 taximeter.start()
                 print("Carrera iniciada")
+                logger.info("Trip started")
+
+            case "p" | "m" | "f" if not taximeter.in_progress:
+                print("Primero empieza carrera con 'e'.")
+                logger.warning("Command '%s' rejected: no trip in progress", command)
+
             case "p":
                 taximeter.set_moving(False)
                 print("Taxi parado.")
+                logger.info("Taxi stopped")
+
             case "m":
                 taximeter.set_moving(True)
                 print("Taxi en movimiento.")
+                logger.info("Taxi moving")
+
             case "f":
                 total = taximeter.finish()
                 total_text = f"{total:.2f}".replace(".", ",")
                 print(f"Carrera finalizada. Total a cobrar: {total_text} €")
+                logger.info("Trip finished, total: %.2f EUR", total)
+
             case "q":
                 print("Hasta luego!")
+                logger.info("Application closed")
                 break
             case _:
                 print("Comando no válido.")
+                logger.warning("Invalid command: %s", command)
 
 if __name__ == "__main__":
     main()
