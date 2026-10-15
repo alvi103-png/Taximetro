@@ -15,6 +15,9 @@ class Taximeter:
         self._segment_start = 0.0
         self._total = 0.0
 
+        self._trip_start = 0.0
+        self._duration = 0.0
+
     @property
     def in_progress(self) -> bool:
         return self._in_progress
@@ -24,6 +27,7 @@ class Taximeter:
         self._is_moving = False
         self._total = 0.0
         self._segment_start = time.time()
+        self._trip_start = self._segment_start
 
     def set_moving(self, is_moving: bool) -> None:
         self._close_segment()
@@ -41,5 +45,11 @@ class Taximeter:
     def finish(self) -> float:
         self._close_segment()
         self._in_progress = False
+        self._duration = self._segment_start - self._trip_start
         return self._total
+
+    @property
+    def duration(self) -> float:
+        """Duración en segundos de la última carrera terminada"""
+        return self._duration
 

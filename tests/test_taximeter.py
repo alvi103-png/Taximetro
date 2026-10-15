@@ -89,5 +89,17 @@ def test_in_progress_follows_trip_lifecycle(clock):
     assert meter.in_progress is False
 
 
+def test_duration_counts_whole_trip(clock):
+    meter = Taximeter(STOPPED_RATE, MOVING_RATE)
+
+    meter.start()
+    clock.advance(10)
+    meter.set_moving(True)
+    clock.advance(20)
+    meter.finish()
+
+    assert meter.duration == pytest.approx(30)
+
+
 
     

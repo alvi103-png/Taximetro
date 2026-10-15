@@ -9,3 +9,6 @@ __pycache__/
 
 # Logs que genera el programa al ejecutarse
 logs/
+
+# historico de carreras que genera el programa
+data/

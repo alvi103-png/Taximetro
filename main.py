@@ -3,6 +3,7 @@ import logging
 from fare_config import load_fares
 from log_config import setup_logging
 from taximeter import Taximeter
+from trip_history import load_today_trips, save_trip
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +18,7 @@ def show_instructions() -> None:
     print("  p  →  Taxi parado")
     print("  m  →  Taxi en movimiento")
     print("  f  →  Finalizar carrera")
+    print("  h  →  Ver carreras de hoy")
     print("  q  →  Salir del programa")
 
     print("\nEscribe la letra y pulsa Enter.")
@@ -67,9 +69,28 @@ def main() -> None:
 
             case "f":
                 total = taximeter.finish()
+                save_trip(taximeter.duration, total)
                 total_text = f"{total:.2f}".replace(".", ",")
                 print(f"Carrera finalizada. Total a cobrar: {total_text} €")
                 logger.info("Trip finished, total: %.2f EUR", total)
+
+            case "h":
+                trips = load_today_trips()
+                if not trips:
+                    print("Hoy todavía no hay carreras.")
+                else:
+                    print("\nCarreras de hoy:")
+                    day_total = 0.0
+                    for trip in trips:
+                        hour = trip["date"][11:16]
+                        seconds = float(trip["duration_seconds"])
+                        total = float(trip["total_eur"])
+                        day_total += total
+                        total_text = f"{total:.2f}".replace(".", ",")
+                        print(f"  {hour}  |  {seconds:.0f} s  |  {total_text} €")
+                    day_text = f"{day_total:.2f}".replace(".", ",")
+                    print(f"Total del día: {day_text} € ({len(trips)} carreras)")
+                logger.info("History requested: %d trips today", len(trips))
 
             case "q":
                 print("Hasta luego!")
